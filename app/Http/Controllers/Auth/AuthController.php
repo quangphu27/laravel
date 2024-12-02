@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Auth;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +36,7 @@ class AuthController extends Controller
             'diachi' => $request->diachi,
             'sdt' => $request->sdt,
         ]);
-        return view('index')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập!');
+        return view('login-register')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập!');
     }
 
     public function login(Request $request)

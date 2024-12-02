@@ -35,7 +35,7 @@ border-radius: 4px;
       <th>Action</th>
 
     </tr>
-    @foreach ($items as $category)
+    @foreach ($item s as $category)
     <tr>
       <td>
         <a href="{{ route('categories.show', $category->id) }}">{{ $category->name }}

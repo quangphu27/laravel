@@ -35,6 +35,11 @@
                         <p style="color:red">Sai tên đăng nhập hoặc mật khẩu rồi bạn</p>
                     </div>
                 @endif
+                @if(session('success'))
+                <div class="alert alert-danger">
+                    <p style="color:red">Đăng kí oke,sài tiền đi</p>
+                </div>
+            @endif
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
@@ -44,7 +49,7 @@
                 <span>or use your email password</span>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <a href="#">Forget Your Password?</a>
+                <a href="{{ url('resetPassword') }}">Forget Your Password?</a>
                 <button type="submit" style="color: white !important;">Sign In</button>
             </form>
             

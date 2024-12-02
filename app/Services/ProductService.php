@@ -14,29 +14,58 @@ class ProductService {
         $this->model = $product;
     }
 
-    public function create($params)
+    /**
+     * Tạo mới một sản phẩm
+     *
+     * @param array $params
+     * @return Product|bool
+     */
+    public function create(array $params)
     {
         try {
-            $params['status'] = 1;
+            $params['status'] = $params['status'] ?? 1;
 
             return $this->model->create($params);
         } catch (Exception $exception) {
-            Log::error($exception);
-            
+            Log::error("Error creating product: " . $exception->getMessage());
+
             return false;
         }
     }
 
-    public function update($product, $param)
+    /**
+     * Cập nhật thông tin sản phẩm
+     *
+     * @param Product $product
+     * @param array $params
+     * @return bool
+     */
+    public function update(Product $product, array $params)
     {
-        $param['status'] = 0;
-        return $product->update($param);
+        try {
+            if (!$product) {
+                throw new Exception("Invalid product instance");
+            }
+
+            return $product->update($params);
+        } catch (Exception $exception) {
+            Log::error("Error updating product: " . $exception->getMessage());
+
+            return false;
+        }
     }
 
-    public function getList()
+    /**
+     * Lấy danh sách sản phẩm
+     *
+     * @param int $perPage
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getList($perPage = 10)
     {
         return $this->model
             ->where('status', 1)
-            ->orderBy('created_at', 'DESC');
+            ->orderBy('created_at', 'DESC')
+            ->paginate($perPage);
     }
 }
