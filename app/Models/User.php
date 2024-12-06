@@ -11,7 +11,7 @@ class User extends Authenticatable
     use HasFactory, HasApiTokens;  // Thêm HasApiTokens vào đây
 
     protected $table = 'users';   
-
+    protected $dates = ['email_verified_at'];
     protected $fillable = [
         'name',
         'email',
@@ -19,6 +19,9 @@ class User extends Authenticatable
         'ngaysinh',
         'diachi',
         'sdt',
+        'email_verified_at',
+        'provider',
+         'provider_id'
     ];
 
     protected $hidden = [

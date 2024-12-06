@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Reset Password | E-Shopper</title>
+    <title>Reset Password</title>
     <link href="{{ asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css') }}" rel="stylesheet" id="bootstrap-css">
     <script src="{{ asset('https://code.jquery.com/jquery-1.11.1.min.js') }}"></script>
     <script src="{{ asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js') }}"></script>

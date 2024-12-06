@@ -26,7 +26,6 @@ class Cart extends Model
     }
     public function totalPrice()
     {
-        // Đảm bảo sản phẩm tồn tại và có giá trị
         if ($this->product && $this->product->price) {
             return $this->product->price * $this->quantity;
         }

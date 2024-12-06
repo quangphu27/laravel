@@ -30,5 +30,24 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => 'http://127.0.0.1:8000/callback/google',
+        // 'redirect' => 'http://127.0.0.1:8000/auth/google/call-back',
+    ],
+
+    'genmini'=>[
+        'key' => env('GEMINI_KEY'),
+    ],
+    'vnpay' => [
+        'TmnCode' => env('VNPAY_TMN_CODE'),
+        'HashSecret' => env('VNPAY_HASH_SECRET'),
+        'BaseUrl' => env('VNPAY_BASE_URL'),
+        'Version' => env('VNPAY_VERSION'),
+        'Command' => env('VNPAY_COMMAND'),
+        'CurrCode' => env('VNPAY_CURR_CODE'),
+        'Locale' => env('VNPAY_LOCALE'),
+    ]
 
 ];

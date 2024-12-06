@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Services\AuthService;
+use App\Models\EmailVerification;
+use App\Mail\EmailVerification as VerificationMail;
+use Illuminate\Support\Str;
 
+use Illuminate\Support\Facades\Mail;
 class AuthController extends Controller
 {
     protected $authService;
@@ -18,46 +22,60 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
+
     public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed', // Kiểm tra password và password_confirmation
-            'diachi' => 'required|string|max:255',
-            'sdt' => 'required|string|max:15',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed', // Kiểm tra password và password_confirmation
+        'diachi' => 'required|string|max:255',
+        'sdt' => 'required|string|max:15',
+    ]);
 
-        User::create([
-            'name' => $request->name, 
-            'email' => $request->email,
-            'password' => Hash::make($request->password), // Mã hóa password
-            'ngaysinh' => '2002/02/27',
-            'diachi' => $request->diachi,
-            'sdt' => $request->sdt,
-        ]);
-        return view('login-register')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập!');
-    }
+    $user=User::create([
+        'name' => $request->name, 
+        'email' => $request->email,
+        'password' => Hash::make($request->password), // Mã hóa password
+        'ngaysinh' => '2002/02/27',
+        'diachi' => $request->diachi,
+        'sdt' => $request->sdt,
+    ]);
 
-    public function login(Request $request)
-    {
-        // Kiểm tra tính hợp lệ của dữ liệu đầu vào
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-    
-        // Sử dụng Auth để kiểm tra thông tin đăng nhập
+    // Tạo mã token xác thực
+    $token = Str::random(60);
+
+    // Lưu token vào bảng email_verifications
+    EmailVerification::create([
+        'user_id' => $user->id,
+        'token' => $token,
+    ]);
+
+    Mail::to($user->email)->send(new VerificationMail($token, $user));
+    return view('emails.wait_verifycation_email');
+}
+
+public function login(Request $request)
+{
+    // Kiểm tra tính hợp lệ của dữ liệu đầu vào
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string',
+    ]);
+    $user = User::where('email', $request->email)->first();
+    if ($user && $user->email_verified_at) {
         if (Auth::attempt($request->only('email', 'password'))) {
-            // Đăng nhập thành công, chuyển hướng đến route 'home'
+            if ($user->email == 'phu2722002@gmail.com') {
+                return redirect()->route('admin.dashboard');
+            }
             return redirect()->route('home');
         }
-    
-        // Đăng nhập thất bại, quay lại trang đăng nhập với thông báo lỗi
-        return redirect()->back()->withErrors([
-            'error' => 'Email hoặc mật khẩu không chính xác.',
-        ]);
     }
+    return redirect()->back()->withErrors([
+        'error' => 'Email hoặc mật khẩu không chính xác, hoặc email chưa được xác thực.',
+    ]);
+}
+
     public function logout()
     {
         Auth::logout();

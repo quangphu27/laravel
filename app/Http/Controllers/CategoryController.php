@@ -59,4 +59,11 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index')->with('error', 'Created fail');
     }
+    public function destroy($id)
+    {
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return redirect()->route('categories.index')->with('success', 'Category deleted successfully');
+    }
 }
